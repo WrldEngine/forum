@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <a href="/">PMICB</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="/questions">Вопросы</a>
+            {% if not request.user.is_authenticated %}
+                <a href="/auth">Авторизация</a>
+                <a href="/reg">Регистрация</a>
+            {% else %}
+                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
+                <a class="ask_q_button" href="/ask">Задать вопрос</a>
+            {% endif %}
+        </div>
+        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
+    </div>
+    {% if messages %}
+        <ul class="messages" id="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                    <button onclick="getElementById('messages').innerHTML=''" id="messages" class="close">✖</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if request.user.verified %}
+        <h1 class="current_user">{{ request.user.username }}</h1>
+    {% else %}
+        <h1 class="current_user">{{ request.user.username }}[Не потвержден. Потвердите пароль по почте]</h1>
+    {% endif %}
+    
+    <table>
+        <tr>
+            <th colspan="2">Имя</th>
+            <th>Юзернейм</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                {% if user.verified %}
+                    <td>{{ user.username }}</td>
+                {% else %}
+                    <td>{{ user.username }} [Не потвержден]</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>{{ question.title }}</title>
+    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <a href="/">PMICB</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="/questions">Вопросы</a>
+            {% if not request.user.is_authenticated %}
+                <a href="/auth">Авторизация</a>
+                <a href="/reg">Регистрация</a>
+            {% else %}
+                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
+                <a class="ask_q_button" href="/ask">Задать вопрос</a>
+            {% endif %}
+        </div>
+        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
+    </div>
+    {% if messages %}
+        <ul class="messages" id="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                    <button onclick="getElementById('messages').innerHTML=''" id="messages" class="close">✖</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="container">
+        {% if question.image %}
+            <img class="question_image" src="{{ question.image.url }}">
+        {% endif %}
+        <hr>
+        <h1>{{ question.title }}</h1>
+        <h3>{{ question.content }}</h2>
+        <p>{{ question.date }}</p>
+        <a href="{% url 'user' question.author %}" class="username_show"><b>{{ question.author }}</b></a>
+    </div>
+
+    <div class="container">
+        <h1>Ответить</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ Form.as_p }}
+            <input type="submit" value="Ответить" class="reg_submit">
+        </form>
+    </div>
+
+    {% for answer in answers %}
+        <div class="container answer">
+            <a href="{% url 'user' answer.author %}" class="username_show"><b>{{ answer.author }}</b></a><br>
+            {% if answer.image %}
+                <img class="question_image" src="{{ answer.image.url }}">
+            {% endif %}
+            <hr>
+            <p>{{ answer.content }}</p>
+            <p>{{ answer.date }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

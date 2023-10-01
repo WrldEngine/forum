@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>{{ user.first_name }}</title>
+    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <script src="{% static 'js/script.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <a href="/">PMICB</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="/questions">Вопросы</a>
+            {% if not request.user.is_authenticated %}
+                <a href="/auth">Авторизация</a>
+                <a href="/reg">Регистрация</a>
+            {% else %}
+                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
+                <a class="ask_q_button" href="/ask">Задать вопрос</a>
+            {% endif %}
+        </div>
+        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
+    </div>
+    {% if messages %}
+        <ul class="messages" id="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                    <button onclick="getElementById('messages').innerHTML=''" id="messages" class="close">✖</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="container account">
+        {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}">
+        {% else %}
+            <img src="{% static 'img/default_photo.jpg' %}">
+        {% endif %}
+        
+        <h1>{{ user.username }}</h1>
+        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+        {% if c_user == user.username %}
+            <h3>{{ user.email }}</h3>
+            <a class="reg_submit" href="{% url 'user' user.username %}settings/">Настройки</a>
+        {% endif %}
+    </div>
+    <hr>
+    <table class="user-detail-table">
+        <tr class="user-detail-tr">
+            <th class="user-detail-th">Заголовок</th>
+            <th class="user-detail-th">Ссылка</th>
+        </tr>
+        {% for question in questions %}
+            <tr class="user-detail-tr">
+                <th class="user-detail-th">{{ question.title }}</th>
+                <th class="user-detail-th"><a href="{% url 'q_details' question.subject question.id %}">Ссылка</a></th>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

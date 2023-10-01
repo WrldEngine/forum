@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Авторизация</title>
+    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <a href="/">PMICB</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="/questions">Вопросы</a>
+            {% if not request.user.is_authenticated %}
+                <a href="/auth">Авторизация</a>
+                <a href="/reg">Регистрация</a>
+            {% else %}
+                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
+                <a class="ask_q_button" href="/ask">Задать вопрос</a>
+            {% endif %}
+        </div>
+        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
+    </div>
+    {% if messages %}
+        <ul class="messages" id="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                    <button onclick="getElementById('messages').innerHTML=''" id="messages" class="close">✖</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="container">
+        <h2>Авторизация</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ Form }}
+            <input type="submit" value="Войти" class="reg_submit">
+        </form>
+        <div class="login-text">
+            Нет аккаунта? <a href="/reg">Регистрация здесь</a>
+        </div>
+    </div>
+</body>
+</html>
