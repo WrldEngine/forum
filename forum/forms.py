@@ -52,6 +52,7 @@ class ChangeProfileForm(forms.ModelForm):
         fields = ['profile_image', 'first_name', 'last_name', 'username', 'password', 'email']
 
 class QuestionForm(forms.ModelForm):
+    image = forms.ImageField(required=False)
     subject = forms.ChoiceField(widget=forms.RadioSelect, choices=SUBJECT_CHOICE)
 
     class Meta:

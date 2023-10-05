@@ -1,7 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 from forum import views
 
@@ -20,7 +21,7 @@ urlpatterns = [
     path('ask', views.ask_question),
     path('q/<str:subject>/<int:id>/', views.question_details, name='q_details'),
     path('questions/', views.questions),
-    path('logout', views.logout_page)
+    path('logout', views.logout_page),
 ]
 
 if settings.DEBUG:
