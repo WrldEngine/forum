@@ -22,6 +22,8 @@ urlpatterns = [
     path('q/<str:subject>/<int:id>/', views.question_details, name='q_details'),
     path('questions/', views.questions),
     path('logout', views.logout_page),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:

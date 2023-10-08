@@ -11,6 +11,7 @@
     <div class="navbar">
         <div class="navbar-logo">
             <a href="/">PMICB</a>
+            <a href="/about" class="about">О нас</a>
         </div>
         <div class="navbar-links" id="navbar-links">
             <a href="/questions">Вопросы</a>
@@ -45,16 +46,18 @@
         <tr>
             <th colspan="2">Имя</th>
             <th>Юзернейм</th>
+            <th>Класс</th>
         </tr>
         {% for user in users %}
             <tr>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 {% if user.verified %}
-                    <td>{{ user.username }}</td>
+                    <td><a style="color:white" href="{% url 'user' user.username %}">{{ user.username }}</a></td>
                 {% else %}
                     <td>{{ user.username }} [Не потвержден]</td>
                 {% endif %}
+                <td>{{ user.grade }}</td>
             </tr>
         {% endfor %}
     </table>
