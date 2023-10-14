@@ -25,6 +25,7 @@
         </div>
         <div class="burger-menu" onclick="toggleNavbar()">☰</div>
     </div>
+
     {% if messages %}
         <ul class="messages" id="messages">
             {% for message in messages %}
@@ -37,11 +38,11 @@
     {% endif %}
     
     {% if request.user.verified %}
-        <h1 class="current_user">{{ request.user.username }}</h1>
+        <h1 class="current_user">{{ request.user.username }} ({{ checked_counter }})</h1>
     {% else %}
         <h1 class="current_user">{{ request.user.username }}[Не потвержден. Потвердите пароль по почте]</h1>
     {% endif %}
-    
+
     <table>
         <tr>
             <th colspan="2">Имя</th>
@@ -53,7 +54,7 @@
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 {% if user.verified %}
-                    <td><a style="color:white" href="{% url 'user' user.username %}">{{ user.username }}</a></td>
+                    <td><a class="userlink" style="color:white" href="{% url 'user' user.username %}">{{ user.username }}</a></td>
                 {% else %}
                     <td>{{ user.username }} [Не потвержден]</td>
                 {% endif %}

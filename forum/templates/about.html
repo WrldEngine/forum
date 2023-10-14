@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">
+            <a href="/">PMICB</a>
+            <a href="/about" class="about">О нас</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="/questions">Вопросы</a>
+            {% if not request.user.is_authenticated %}
+                <a href="/auth">Авторизация</a>
+                <a href="/reg">Регистрация</a>
+            {% else %}
+                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
+                <a class="ask_q_button" href="/ask">Задать вопрос</a>
+            {% endif %}
+        </div>
+        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
+    </div>
+
+    {% if messages %}
+        <ul class="messages" id="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                    <button onclick="getElementById('messages').innerHTML=''" id="messages" class="close">✖</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <br>
+    <table>
+        <tr>
+            <th>N</th>
+            <th>Rules</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Ребят, выбирайте размер для аватарки(если вы и ставите) то желательно с размерами 300 на 300 как квадаратик</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td> Не ставить оскорбительные имена пользователей или имен</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Придумывайте пароль, который сможете запомнить, так как даже admin не сможет узнать пароль, так как они зашифрованы односторонним шифрованием</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Не спамить задавая много вопросов, иначе ваш аккаунт будет удален администратором</td>
+        </tr>
+    </table>
+    <br>
+    <table border="1">
+        <tr>
+            <th>День</th>
+            <th>Время</th>
+            <th>Кабинет</th>
+            <th>Предметы</th>
+        </tr>
+        <tr>
+            <td>Понедельник</td>
+            <td>15:10 - 16:40</td>
+            <td>405</td>
+            <td>Физика, Математика, Химия</td>
+        </tr>
+        <tr>
+            <td>Вторник</td>
+            <td>15:10 - 16:40</td>
+            <td>311</td>
+            <td>Физика</td>
+        </tr>
+        <tr>
+            <td>Четверг</td>
+            <td>15:10 - 16:40</td>
+            <td>311</td>
+            <td>Математика, Физика</td>
+        </tr>
+        <tr>
+            <td>Пятница</td>
+            <td>15:10 - 16:40</td>
+            <td>311</td>
+            <td>Математика, Физика, Биология, Химия</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="color: yellow">
+                Вопросы по информатике задавать исключительно на форуме (Если Камран конечно не захочет торчать в клубе какой-либо из дней). 
+                Временно по понедельникам математика и физика также будет проходить в 311 кабинете. 
+                Если в течении получаса никто в клуб не приходит, то мы уходим.
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

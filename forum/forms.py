@@ -8,7 +8,9 @@ SUBJECT_CHOICE = (
     ('biology', 'Биология'),
     ('physics', 'Физика'),
     ('math', 'Математика'),
-    ('it', 'Информатика')
+    ('it', 'Информатика'),
+    ('english', 'Английский'),
+    ('russian', 'Русский')
 )
 
 class RegForm(forms.ModelForm):

@@ -37,7 +37,7 @@
     {% endif %}
     <div class="container account">
         {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}">
+            <img src="{{ user.profile_image.url }}" class="profile_image">
         {% else %}
             <img src="{% static 'img/default_photo.jpg' %}">
         {% endif %}

@@ -17,9 +17,17 @@ from .forms import RegForm, AuthForm, ChangeProfileForm, QuestionForm, AnswerFor
 @login_required
 def index(request):
     users = ForumUser.objects.all().order_by('date_joined')
+    checked_counter = request.session.get('checked', 0)
+    question_counter = Questions.objects.all().count()
 
-    return render(request, 'index.html', context={'users': users})
+    checked_counter = question_counter - checked_counter
 
+    context = {
+        'users': users,
+        'checked_counter': checked_counter
+    }
+
+    return render(request, 'index.html', context=context)
 
 def reg(request):
     Form = RegForm()
@@ -39,7 +47,7 @@ def reg(request):
             html_content = render_to_string('confirm_email.html', email_file_context)
             plain_text = strip_tags(html_content)
 
-            send_mail('Verification Code', plain_text, "Organization", [user.email], html_message=html_content)
+            send_mail('Verification Code', plain_text, "pmicb@forumstudy.uz", [user.email], html_message=html_content)
             messages.info(request, 'На вашу почту было отправлена ссылка потверждения аккаунта')
 
             return redirect('/auth')
@@ -47,7 +55,6 @@ def reg(request):
             messages.error(request, 'Имя пользователя или почта уже заняты')
 
     return render(request, 'reg.html', context={'Form': Form})
-
 
 def auth(request):
     Form = AuthForm()
@@ -65,7 +72,6 @@ def auth(request):
 
     return render(request, 'auth.html', context={'Form': Form})
 
-
 def verify(request, name, email):
     unique_token = request.GET.get('token')
     user = ForumUser.objects.get(username=name)
@@ -77,7 +83,6 @@ def verify(request, name, email):
         return redirect('/')
     else:
         return HttpResponse('Error! Invalid token or email')
-
 
 @login_required
 def ask_question(request):
@@ -96,7 +101,6 @@ def ask_question(request):
 
     return render(request, 'ask_q.html', context={'Form': Form, 'user': user})
 
-
 def questions(request):
     filter_query = request.GET.get('order_by')
 
@@ -104,9 +108,10 @@ def questions(request):
         questions = Questions.objects.all().order_by('-date')
     else:
         questions = Questions.objects.filter(subject=filter_query)
+    
+    request.session['checked'] = Questions.objects.all().count()
 
     return render(request, 'questions.html', context={'questions': questions})
-
 
 def question_details(request, subject, id):
     question = Questions.objects.get(id=id)
@@ -137,7 +142,6 @@ def user(request, username):
     context={'user': user, 'c_user': current_user, 'questions': questions}
 
     return render(request, 'user_detail.html', context=context)
-
 
 @login_required
 def settings(request, username):
@@ -171,6 +175,8 @@ def settings(request, username):
     messages.error(request, 'Вы не являетесь данным пользователем либо вы не потвердили почту')
     return render(request, 'settings.html')
 
+def about(request):
+    return render(request, 'about.html')
 
 @login_required
 def logout_page(request):
