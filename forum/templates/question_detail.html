@@ -10,7 +10,7 @@
 <body>
     <div class="navbar">
         <div class="navbar-logo">
-            <a href="/">PMICB</a>
+            <a href="/">SciLang</a>
             <a href="/about">О нас</a>
         </div>
         <div class="navbar-links" id="navbar-links">
@@ -25,6 +25,7 @@
         </div>
         <div class="burger-menu" onclick="toggleNavbar()">☰</div>
     </div>
+
     {% if messages %}
         <ul class="messages" id="messages">
             {% for message in messages %}
@@ -35,6 +36,7 @@
             {% endfor %}
         </ul>
     {% endif %}
+
     <div class="container">
         {% if question.image %}
             <img class="question_image" src="{{ question.image.url }}">

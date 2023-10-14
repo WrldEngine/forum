@@ -282,9 +282,14 @@ tr:nth-child(even) {
     text-decoration: none;
 }
 
-.profile_photo {
-    vertical-align: middle;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.container-post {
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #333;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-top: 30px;
+    max-width: 50%;
+    text-align: left;
+    width: 100%;
 }

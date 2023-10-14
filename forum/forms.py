@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from .models import ForumUser, Answers, Questions
+from .models import ForumUser, Answers, Questions, Posts
 
 SUBJECT_CHOICE = (
     ('chemistry', 'Химия'),
@@ -67,3 +67,8 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answers
         fields = ['image', 'content']
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Posts
+        fields = ['title', 'content']

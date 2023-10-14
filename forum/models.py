@@ -10,6 +10,7 @@ class ForumUser(AbstractUser):
     unique_token = models.TextField(null=True)
     grade = models.IntegerField(null=True)
     email = models.EmailField(unique=True)
+    post_creating = models.BooleanField(null=True, default=False)
 
     def generate_token(self):
         hash_code = secrets.token_hex(16)
@@ -47,3 +48,15 @@ class Answers(models.Model):
 
     class Meta:
         verbose_name = "Answer"
+
+class Posts(models.Model):
+    title = models.CharField(max_length=20000)
+    content = models.TextField()
+    author = models.ForeignKey(ForumUser, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = "Post"

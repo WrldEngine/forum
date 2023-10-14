@@ -23,6 +23,7 @@ urlpatterns = [
     path('questions/', views.questions),
     path('logout', views.logout_page),
     path('about', views.about),
+    path('makepost', views.makepost),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]

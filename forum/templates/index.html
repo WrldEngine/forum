@@ -10,7 +10,7 @@
 <body>
     <div class="navbar">
         <div class="navbar-logo">
-            <a href="/">PMICB</a>
+            <a href="/">SciLang</a>
             <a href="/about" class="about">О нас</a>
         </div>
         <div class="navbar-links" id="navbar-links">
@@ -38,29 +38,18 @@
     {% endif %}
     
     {% if request.user.verified %}
-        <h1 class="current_user">{{ request.user.username }} ({{ checked_counter }})</h1>
+        <h1 class="current_user">{{ request.user.username }}</h1>
     {% else %}
         <h1 class="current_user">{{ request.user.username }}[Не потвержден. Потвердите пароль по почте]</h1>
     {% endif %}
 
-    <table>
-        <tr>
-            <th colspan="2">Имя</th>
-            <th>Юзернейм</th>
-            <th>Класс</th>
-        </tr>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.first_name }}</td>
-                <td>{{ user.last_name }}</td>
-                {% if user.verified %}
-                    <td><a class="userlink" style="color:white" href="{% url 'user' user.username %}">{{ user.username }}</a></td>
-                {% else %}
-                    <td>{{ user.username }} [Не потвержден]</td>
-                {% endif %}
-                <td>{{ user.grade }}</td>
-            </tr>
+    <div class="container-post">
+        {% for post in posts %}
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.content }}</p>
+            <a href="{% url 'user' post.author %}" class="username_show"><b>{{ post.author }}</b></a><br>
+            <p>{{ post.date }}</p>
         {% endfor %}
-    </table>
+    </div>
 </body>
 </html>

@@ -11,20 +11,23 @@ from django.contrib import messages
 
 from django.contrib.auth import login, authenticate, logout
 
-from .models import ForumUser, Questions, Answers
-from .forms import RegForm, AuthForm, ChangeProfileForm, QuestionForm, AnswerForm
+from .models import ForumUser, Questions, Answers, Posts
+from .forms import RegForm, AuthForm, ChangeProfileForm, QuestionForm, AnswerForm, PostForm
+
+from django.template.defaulttags import register
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 @login_required
 def index(request):
     users = ForumUser.objects.all().order_by('date_joined')
-    checked_counter = request.session.get('checked', 0)
-    question_counter = Questions.objects.all().count()
-
-    checked_counter = question_counter - checked_counter
+    posts = Posts.objects.all().order_by('-date')
 
     context = {
         'users': users,
-        'checked_counter': checked_counter
+        'posts': posts
     }
 
     return render(request, 'index.html', context=context)
@@ -108,8 +111,6 @@ def questions(request):
         questions = Questions.objects.all().order_by('-date')
     else:
         questions = Questions.objects.filter(subject=filter_query)
-    
-    request.session['checked'] = Questions.objects.all().count()
 
     return render(request, 'questions.html', context={'questions': questions})
 
@@ -139,9 +140,36 @@ def user(request, username):
     user = ForumUser.objects.get(username=username)
     questions = Questions.objects.filter(author=user.id).order_by('-date')
 
-    context={'user': user, 'c_user': current_user, 'questions': questions}
+    ans_count = {q.id: Answers.objects.filter(question=q.id).count() for q in questions}
+
+    context = {
+        'user': user,
+        'c_user': current_user,
+        'questions': questions,
+        'ans_count': ans_count,
+    }
 
     return render(request, 'user_detail.html', context=context)
+
+@login_required
+def makepost(request):
+    if request.user.post_creating == True:
+        Form = PostForm()
+
+        if request.method == "POST":
+            Form = PostForm(request.POST)
+
+            if Form.is_valid():
+                Form.instance.author = request.user
+                Form.save()
+
+                return redirect('/')
+            else:
+                messages.error(request, 'Форма заполнена неправильно')
+        
+        return render(request, 'makepost.html', context={'Form': Form})
+    else:
+        return HttpResponse("ВАМ НЕЛЬЗЯ")
 
 @login_required
 def settings(request, username):

@@ -2,7 +2,7 @@
 {% load static %}
 <html>
 <head>
-    <title>Вопросы</title>
+    <title>Задать вопрос</title>
     <link rel="stylesheet" href='{% static "css/design.css" %}'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{% static 'js/script.js' %}"></script>
@@ -26,16 +26,6 @@
         <div class="burger-menu" onclick="toggleNavbar()">☰</div>
     </div>
 
-    <div class="buttons-container">
-        <a class="button" href="/questions?order_by=physics">Физика</a>
-        <a class="button" href="/questions?order_by=math">Математика</a>
-        <a class="button" href="/questions?order_by=it">Информатика</a>
-        <a class="button" href="/questions?order_by=chemistry">Химия</a>
-        <a class="button" href="/questions?order_by=biology">Биология</a>
-        <a class="button" href="/questions?order_by=english">Английский</a>
-        <a class="button" href="/questions?order_by=russian">Русский</a>
-    </div>
-
     {% if messages %}
         <ul class="messages" id="messages">
             {% for message in messages %}
@@ -46,15 +36,14 @@
             {% endfor %}
         </ul>
     {% endif %}
-    {% for question in questions %}
-        <div class="container">
-            <a href="{% url 'user' question.author %}" class="username_show"><b>{{ question.author }}</b></a>
-            <hr>
-            <p>{{ question.title }}</p>
-            <p>Дата: {{ question.date }}</p>
-            <p>Предмет: {{ question.subject }}</p>
-            <a class="reg_submit" href="{% url 'q_details' question.subject question.id %}">Ссылка</a>
-        </div>
-    {% endfor %}
+
+    <div class="container">
+        <h2>Создать публикацию</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ Form.as_p }}
+            <input type="submit" value="Потвердить" class="reg_submit">
+        </form>
+    </div>
 </body>
 </html>

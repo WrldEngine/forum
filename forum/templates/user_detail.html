@@ -10,7 +10,7 @@
 <body>
     <div class="navbar">
         <div class="navbar-logo">
-            <a href="/">PMICB</a>
+            <a href="/">SciLang</a>
             <a href="/about">О нас</a>
         </div>
         <div class="navbar-links" id="navbar-links">
@@ -55,10 +55,10 @@
             <th class="user-detail-th">Заголовок</th>
             <th class="user-detail-th">Ссылка</th>
         </tr>
-        {% for question in questions %}
+        {% for q in questions %}
             <tr class="user-detail-tr">
-                <th class="user-detail-th">{{ question.title }}</th>
-                <th class="user-detail-th"><a href="{% url 'q_details' question.subject question.id %}">Ссылка</a></th>
+                <th class="user-detail-th">{{ q.title }} ({{ ans_count|get_item:q.id }})</th>
+                <th class="user-detail-th"><a href="{% url 'q_details' q.subject q.id %}">Ссылка</a></th>
             </tr>
         {% endfor %}
     </table>
