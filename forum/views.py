@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
@@ -19,6 +19,10 @@ from django.template.defaulttags import register
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+def userslist(request):
+    users = ForumUser.objects.all()
+    return render(request, 'userlist.html', context={'users': users})
 
 @login_required
 def index(request):
@@ -205,6 +209,23 @@ def settings(request, username):
 
 def about(request):
     return render(request, 'about.html')
+
+@login_required
+def like_post(request, post_id):
+    if request.method == "POST":
+        post = get_object_or_404(Posts, id=post_id)
+
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+            liked = True
+        else:
+            post.likes.add(request.user)
+            liked = False
+
+        post.save()
+
+        data = {'liked': liked, 'likes_count': post.likes.count()}
+        return JsonResponse(data)
 
 @login_required
 def logout_page(request):

@@ -54,6 +54,7 @@ class Posts(models.Model):
     content = models.TextField()
     author = models.ForeignKey(ForumUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(ForumUser, related_name='liked_posts', blank=True)
 
     def __str__(self):
         return self.title

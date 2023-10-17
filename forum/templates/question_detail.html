@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>{{ question.title }}</title>
-    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <link rel="stylesheet" href='{% static "css/design.css" %}?{% now "U" %}'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{% static 'js/script.js' %}"></script>
 </head>
@@ -12,6 +12,7 @@
         <div class="navbar-logo">
             <a href="/">SciLang</a>
             <a href="/about">О нас</a>
+            <a href="/userslist">Ученики</a>
         </div>
         <div class="navbar-links" id="navbar-links">
             <a href="/questions">Вопросы</a>

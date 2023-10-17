@@ -3,8 +3,9 @@
 <html>
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href='{% static "css/design.css" %}'>
+    <link rel="stylesheet" href='{% static "css/design.css" %}?{% now "U" %}'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
 </head>
 <body>
@@ -12,6 +13,7 @@
         <div class="navbar-logo">
             <a href="/">SciLang</a>
             <a href="/about" class="about">О нас</a>
+            <a href="/userslist">Ученики</a>
         </div>
         <div class="navbar-links" id="navbar-links">
             <a href="/questions">Вопросы</a>
@@ -42,14 +44,43 @@
     {% else %}
         <h1 class="current_user">{{ request.user.username }}[Не потвержден. Потвердите пароль по почте]</h1>
     {% endif %}
-
-    <div class="container-post">
-        {% for post in posts %}
+    
+    {% for post in posts %}
+        <div class="container-post">
             <h1>{{ post.title }}</h1>
             <p>{{ post.content }}</p>
             <a href="{% url 'user' post.author %}" class="username_show"><b>{{ post.author }}</b></a><br>
             <p>{{ post.date }}</p>
-        {% endfor %}
-    </div>
+            <p>Кому понравилось: <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span></p>
+            <button id="like-button-{{ post.id }}" onclick="toggleLike({{ post.id }})">
+                {% if request.user in post.likes.all %}
+                    Не нравится
+                {% else %}
+                    Нравится
+                {% endif %}
+            </button>
+        </div>
+    {% endfor %}
+
+    <script>
+        function toggleLike(post_id) {
+            $.ajax({
+                type: 'POST',
+                url: `/like_post/${post_id}`,
+                data: {post_id: post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (data) {
+                    if (data.liked) {
+                        $('#like-button-' + post_id).text('Нравится');
+                    } else {
+                        $('#like-button-' + post_id).text('Не нравится');
+                    }
+                    $('#like-count-' + post_id).text(data.likes_count);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

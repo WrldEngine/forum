@@ -2,16 +2,16 @@
 {% load static %}
 <html>
 <head>
-    <title>{{ user.first_name }}</title>
+    <title>Home</title>
     <link rel="stylesheet" href='{% static "css/design.css" %}?{% now "U" %}'>
-    <script src="{% static 'js/script.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'js/script.js' %}"></script>
 </head>
 <body>
     <div class="navbar">
         <div class="navbar-logo">
             <a href="/">SciLang</a>
-            <a href="/about">О нас</a>
+            <a href="/about" class="about">О нас</a>
             <a href="/userslist">Ученики</a>
         </div>
         <div class="navbar-links" id="navbar-links">
@@ -26,6 +26,7 @@
         </div>
         <div class="burger-menu" onclick="toggleNavbar()">☰</div>
     </div>
+
     {% if messages %}
         <ul class="messages" id="messages">
             {% for message in messages %}
@@ -36,30 +37,23 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <div class="container account">
-        {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}" class="profile_image">
-        {% else %}
-            <img src="{% static 'img/default_photo.jpg' %}">
-        {% endif %}
-        
-        <h1>{{ user.username }}</h1>
-        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-        {% if c_user == user.username %}
-            <h3>{{ user.email }}</h3>
-            <a class="reg_submit" href="{% url 'user' user.username %}settings/">Настройки</a>
-        {% endif %}
-    </div>
-    <hr>
-    <table class="user-detail-table">
-        <tr class="user-detail-tr">
-            <th class="user-detail-th">Заголовок</th>
-            <th class="user-detail-th">Ссылка</th>
+    <br>
+    <table>
+        <tr>
+            <th colspan="2">Имя</th>
+            <th>Юзернейм</th>
+            <th>Класс</th>
         </tr>
-        {% for q in questions %}
-            <tr class="user-detail-tr">
-                <th class="user-detail-th">{{ q.title }} ({{ ans_count|get_item:q.id }})</th>
-                <th class="user-detail-th"><a href="{% url 'q_details' q.subject q.id %}">Ссылка</a></th>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                {% if user.verified %}
+                    <td><a class="userlink" style="color:white" href="{% url 'user' user.username %}">{{ user.username }}</a></td>
+                {% else %}
+                    <td>{{ user.username }} [Не потвержден]</td>
+                {% endif %}
+                <td>{{ user.grade }}</td>
             </tr>
         {% endfor %}
     </table>
