@@ -3,29 +3,49 @@
 <html>
 <head>
     <title>{{ user.first_name }}</title>
-    <link rel="stylesheet" href='{% static "css/design.css" %}?{% now "U" %}'>
-    <script src="{% static 'js/script.js' %}"></script>
+    <link rel="stylesheet" href='{% static "css/style.css" %}?{% now "U" %}'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-    <div class="navbar">
-        <div class="navbar-logo">
-            <a href="/">SciLang</a>
-            <a href="/about">О нас</a>
-            <a href="/userslist">Ученики</a>
+<body class="body-custom">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="nav-link navbar-brand" href="/">SciLang</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">О нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/userslist">Ученики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/questions">Вопросы</a>
+                    </li>
+                    {% if not request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth">Авторизация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reg">Регистрация</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user' request.user.username %}">Аккаунт</a>
+                        </li>
+                        <li class="nav-item d-grid">
+                            <a class="btn btn-success btn-block" href="/ask">Задать вопрос</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-        <div class="navbar-links" id="navbar-links">
-            <a href="/questions">Вопросы</a>
-            {% if not request.user.is_authenticated %}
-                <a href="/auth">Авторизация</a>
-                <a href="/reg">Регистрация</a>
-            {% else %}
-                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
-                <a class="ask_q_button" href="/ask">Задать вопрос</a>
-            {% endif %}
-        </div>
-        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
-    </div>
+    </nav>
+
     {% if messages %}
         <ul class="messages" id="messages">
             {% for message in messages %}
@@ -36,32 +56,37 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <div class="container account">
+
+    <div class="card mt-4" style="max-width: 300px; margin: 0 auto; background-color: #333; color: #fff;">
         {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}" class="profile_image">
+            <img src="{{ user.profile_image.url }}" width="300" height="300" class="profile_image">
         {% else %}
             <img src="{% static 'img/default_photo.jpg' %}">
         {% endif %}
-        
-        <h1>{{ user.username }}</h1>
-        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-        {% if c_user == user.username %}
-            <h3>{{ user.email }}</h3>
-            <a class="reg_submit" href="{% url 'user' user.username %}settings/">Настройки</a>
-        {% endif %}
+        <div class="card-body d-grid">
+            <h1 class="card-title">{{ user.username }}</h1>
+            <h3 class="card-text">{{ user.first_name }} {{ user.last_name }}</h3>
+            {% if c_user == user.username %}
+                <h3 class="card-text">{{ user.email }}</h3>
+                <a class="btn btn-success btn-block" href="{% url 'user' user.username %}settings/">Настройки</a>
+            {% endif %}
+        </div>
     </div>
     <hr>
-    <table class="user-detail-table">
-        <tr class="user-detail-tr">
-            <th class="user-detail-th">Заголовок</th>
-            <th class="user-detail-th">Ссылка</th>
-        </tr>
-        {% for q in questions %}
-            <tr class="user-detail-tr">
-                <th class="user-detail-th">{{ q.title }} ({{ ans_count|get_item:q.id }})</th>
-                <th class="user-detail-th"><a href="{% url 'q_details' q.subject q.id %}">Ссылка</a></th>
+    <div class="container mt-3 text-white">
+        Ваши вопросы
+        <table class="table table-dark table-sm">
+            <tr>
+                <th>Заголовок</th>
+                <th>Ссылка</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for q in questions %}
+                <tr>
+                    <th>{{ q.title }} ({{ ans_count|get_item:q.id }})</th>
+                    <th><a href="{% url 'q_details' q.subject q.id %}">Ссылка</a></th>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>    
 </body>
 </html>

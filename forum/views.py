@@ -222,10 +222,10 @@ def like_post(request, post_id):
             post.likes.add(request.user)
             liked = False
 
-        post.save()
-
         data = {'liked': liked, 'likes_count': post.likes.count()}
         return JsonResponse(data)
+    else:
+        return HttpResponse("ERROR")
 
 @login_required
 def logout_page(request):

@@ -18,11 +18,12 @@ class RegForm(forms.ModelForm):
         validators=[
             MinValueValidator(1, message="Класс не может быть меньше 1"),
             MaxValueValidator(11, message="Класс не может быть больше 11")
-        ]
+        ],
+        label='Класс'
     )
-    username = forms.CharField()
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(label='Юзернейм')
+    email = forms.EmailField(label='Почта')
+    password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
 
     def __init__(self, *args, **kwargs):
         super(RegForm, self).__init__(*args, **kwargs)
@@ -38,8 +39,8 @@ class RegForm(forms.ModelForm):
         fields = ['grade', 'username', 'email', 'first_name', 'last_name', 'password']
 
 class AuthForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(widget=forms.TextInput(), label='Юзернейм')
+    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
 
 class ChangeProfileForm(forms.ModelForm):
     profile_image = forms.ImageField(label='Фото профиля')
@@ -54,12 +55,17 @@ class ChangeProfileForm(forms.ModelForm):
         fields = ['profile_image', 'first_name', 'last_name', 'username', 'password', 'email']
 
 class QuestionForm(forms.ModelForm):
-    image = forms.ImageField(required=False)
-    subject = forms.ChoiceField(widget=forms.RadioSelect, choices=SUBJECT_CHOICE)
+    image = forms.ImageField(required=False, label='Фото')
+    subject = forms.ChoiceField(widget=forms.RadioSelect, choices=SUBJECT_CHOICE, label='Предмет')
 
     class Meta:
         model = Questions
         fields = ['image', 'subject', 'title', 'content']
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        self.fields['title'].label = "Заголовок"
+        self.fields['content'].label = "Содержимое вопроса"
 
 class AnswerForm(forms.ModelForm):
     image = forms.ImageField(required=False)

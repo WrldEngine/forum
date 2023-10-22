@@ -3,29 +3,48 @@
 <html>
 <head>
     <title>Регистрация</title>
-    <link rel="stylesheet" href='{% static "css/design.css" %}?{% now "U" %}'>
+    <link rel="stylesheet" href='{% static "css/style.css" %}?{% now "U" %}'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{% static 'js/script.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-    <div class="navbar">
-        <div class="navbar-logo">
-            <a href="/">SciLang</a>
-            <a href="/about">О нас</a>
-            <a href="/userslist">Ученики</a>
+<body class="body-custom">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="nav-link navbar-brand" href="/">SciLang</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">О нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/userslist">Ученики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/questions">Вопросы</a>
+                    </li>
+                    {% if not request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth">Авторизация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reg">Регистрация</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user' request.user.username %}">Аккаунт</a>
+                        </li>
+                        <li class="nav-item d-grid">
+                            <a class="btn btn-success btn-block" href="/ask">Задать вопрос</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-        <div class="navbar-links" id="navbar-links">
-            <a href="/questions">Вопросы</a>
-            {% if not request.user.is_authenticated %}
-                <a href="/auth">Авторизация</a>
-                <a href="/reg">Регистрация</a>
-            {% else %}
-                <a href="{% url 'user' request.user.username %}">Аккаунт</a>
-                <a class="ask_q_button" href="/ask">Задать вопрос</a>
-            {% endif %}
-        </div>
-        <div class="burger-menu" onclick="toggleNavbar()">☰</div>
-    </div>
+    </nav>
 
     {% if messages %}
         <ul class="messages" id="messages">
@@ -39,14 +58,14 @@
     {% endif %}
     
     <div class="container">
-        <h2>Регистрация</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ Form }}
-            <input type="submit" value="Зарегистрироваться" class="reg_submit">
-        </form>
-        <div class="login-text">
-            Уже зарегистрированы? <a href="/auth">Войдите здесь</a>
+        <div class="container text-white bg-dark mt-3 my-3 p-4 rounded mx-auto">
+            <h2>Регистрация</h2>
+            <form method="post" class="form-signin d-grid">
+                {% csrf_token %}
+                {{ Form }}
+                <button type="submit" class="btn btn-success btn-block">Зарегистрироваться</button>
+            </form>
+            <p class="mt-3">Есть аккаунт? <a href="/auth">Авторизация здесь</a></p>
         </div>
     </div>
 </body>
