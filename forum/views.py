@@ -29,9 +29,19 @@ def index(request):
     users = ForumUser.objects.all().order_by('date_joined')
     posts = Posts.objects.all().order_by('-date')
 
+    questions_all_count = Questions.objects.all().count()
+    questions_count = Questions.objects.filter(views=request.user).count()
+
+    unwatched_questions = questions_all_count - questions_count
+    
+    for post in posts:
+        if not request.user in post.views.all():
+            post.views.add(request.user)
+
     context = {
         'users': users,
-        'posts': posts
+        'posts': posts,
+        'unwatched_questions': unwatched_questions,
     }
 
     return render(request, 'index.html', context=context)
@@ -115,6 +125,10 @@ def questions(request):
         questions = Questions.objects.all().order_by('-date')
     else:
         questions = Questions.objects.filter(subject=filter_query)
+
+    for question in questions:
+        if not request.user in question.views.all():
+            question.views.add(request.user)
 
     return render(request, 'questions.html', context={'questions': questions})
 

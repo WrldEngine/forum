@@ -29,6 +29,7 @@ class Questions(models.Model):
     content = models.TextField()
     author = models.ForeignKey(ForumUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    views = models.ManyToManyField(ForumUser, related_name='post_views', blank=True)
 
     def __str__(self):
         return self.title
@@ -55,6 +56,7 @@ class Posts(models.Model):
     author = models.ForeignKey(ForumUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(ForumUser, related_name='liked_posts', blank=True)
+    views = models.ManyToManyField(ForumUser, related_name='views', blank=True)
 
     def __str__(self):
         return self.title

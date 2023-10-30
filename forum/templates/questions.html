@@ -79,7 +79,7 @@
             <div class="container text-white bg-dark mt-3 my-3 d-grid p-4 rounded">
                 <a href="{% url 'user' question.author %}" class="username_show"><b>{{ question.author }}</b></a>
                 <b><p>{{ question.title }}</p></b>
-                <p>Дата: {{ question.date }}</p>
+                <p>Дата: {{ question.date }} | Просмотры: {{ question.views.count }}</p>
                 <p>Предмет: {{ question.subject }}</p>
                 <a class="btn btn-success btn-block" href="{% url 'q_details' question.subject question.id %}">Ответить</a>
             </div>

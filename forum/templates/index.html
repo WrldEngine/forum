@@ -60,7 +60,7 @@
     
     <div class="container text-white">
         {% if request.user.verified %}
-            <h1 class="current_user">{{ request.user.username }}</h1>
+            <h1 class="current_user">{{ request.user.username }} ({{ unwatched_questions }})</h1>
         {% else %}
             <h1 class="current_user">{{ request.user.username }}[Не потвержден. Потвердите пароль по почте]</h1>
         {% endif %}
@@ -72,8 +72,10 @@
                 <h1>{{ post.title }}</h1>
                 <b><p>{{ post.content }}</p></b>
                 <a href="{% url 'user' post.author %}" class="username_show"><b>{{ post.author }}</b></a><br>
+                
                 <p>{{ post.date }}</p>
-                <p class="btn btn-outline-success">Кому понравилось: <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span></p>
+                <p class="btn btn-outline-success">Кому понравилось: <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span> | Просмотров: {{ post.views.count }}</p>
+                
                 <button id="like-button-{{ post.id }}" class="btn btn-primary btn-block" onclick="toggleLike({{ post.id }})">
                     {% if request.user in post.likes.all %}
                         Не нравится
